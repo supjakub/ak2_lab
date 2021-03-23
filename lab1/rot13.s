@@ -1,31 +1,34 @@
-.global _start
+global _start
 
-.data
-    message: .ascii "Podaj zdanie:\n"
-    buffer: .space 100    
+section .data
 
-.text
+    message db "Podaj swoj tekst:", 0ah
+    buffer times 100 db 0
 
-    _start:
-        mov $4, %eax
-        mov $1, %ebx
-        mov $message, %ecx
-        mov $14, %edx
-        int $0x80
+section .text
+_start:
 
-        mov $3, %eax
-        mov $0, %ebx
-        mov $buffer, %ecx
-        mov $100, %edx
-        int $0x80
+    ; Wypisywanie tekstu
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, message
+    mov edx, 18
+    int 80h
 
-        mov $4, %eax
-        mov $1, %ebx
-        mov $buffer, %ecx
-        mov $100, %edx
-        int $0x80      
+    ; Pobieranie tekstu
+    mov eax, 3
+    mov ebx, 1
+    mov ecx, buffer
+    mov edx, 100
+    int 80h
 
-        mov $1, %eax
-        mov $0, %ebx
-        int $0x80
+    ; Wypisywanie tekstu
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, buffer
+    mov edx, 100
+    int 80h
 
+    ; Zakonczenie programu
+    mov eax, 1
+    int 80h
