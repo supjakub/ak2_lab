@@ -1,6 +1,6 @@
 all: rot13
 
-rot13.o: rot13.S
+rot13.o: rot13.s
 	nasm -f elf32 rot13.s
 
 rot13: rot13.o
