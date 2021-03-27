@@ -22,16 +22,19 @@ _start:
     mov edx, 100
     int 80h
 
-    mov cl, 5
-    mov eax, buffer
+    mov cx, 100
+    mov byte ah, buffer
     loop:
-        add byte [eax], 13
-        inc eax
-        dec cl
+        cmp ah, 0
+        je end
+        add byte ah, 13
+        inc ah
+        dec cx
     jnz loop
         
 
     ; Wypisywanie tekstu
+    end:
     mov eax, 4
     mov ebx, 1
     mov ecx, buffer
