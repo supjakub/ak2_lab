@@ -2,7 +2,8 @@ global _start
 
 section .data
 
-    message db "Podaj swoj tekst:", 0ah
+    message1 db "Podaj zdanie: "
+    message2 db "ROT13: "
     buffer times 100 db 0
 
 section .text
@@ -11,8 +12,8 @@ _start:
     ; Wypisywanie tekstu
     mov eax, 4
     mov ebx, 1
-    mov ecx, message
-    mov edx, 18
+    mov ecx, message1
+    mov edx, 14
     int 80h
 
     ; Pobieranie tekstu
@@ -62,6 +63,11 @@ _start:
         
 
     ; Wypisywanie tekstu
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, message2
+    mov edx, 7
+    int 80h
     mov eax, 4
     mov ebx, 1
     mov ecx, buffer
