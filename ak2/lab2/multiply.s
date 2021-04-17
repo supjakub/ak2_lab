@@ -38,28 +38,36 @@ _start:
     mov edx, 200
     int 80h
 
-    ;Walidacja i konwersja
+    ;Walidacja i konwersja mnoznej
     mov cl, 200
     mov eax, multiplicand
-    cmp byte [eax], 48
-    jl bad_input
-    cmp byte [eax], 57
-    jg check_upper_case
-    ; TODO: zamiana cyfr
-    
-    check_upper_case:
-    cmp byte [eax], 65
-    jl bad_input
-    cmp byte [eax], 70
-    jg check_lower_case
-    ; TODO: zamiana A-F
 
-    check_lower_case:
-    cmp byte [eax], 97
-    jl bad_input
-    cmp byte [eax], 102
-    jg bad_input
-    ;TODO: zamiana a-f
+    loop:
+        cmp byte [eax], 48
+        jl bad_input
+        cmp byte [eax], 57
+        jg check_upper_case1
+        ; TODO: zamiana cyfr
+    
+        check_upper_case1:
+        cmp byte [eax], 65
+        jl bad_input
+        cmp byte [eax], 70
+        jg check_lower_case1
+        ; TODO: zamiana A-F
+
+        check_lower_case1:
+        cmp byte [eax], 97
+        jl bad_input
+        cmp byte [eax], 102
+        jg bad_input
+        ; TODO: zamiana a-f
+
+        end_loop:
+        inc eax
+        dec cl
+        cmp cl, 0
+    jne loop
     
     ; Zakonczenie programu
     mov eax, 1
