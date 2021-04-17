@@ -42,7 +42,7 @@ _start:
     mov cl, 200
     mov eax, multiplicand
 
-    loop:
+    loop1:
         cmp byte [eax], 48
         jl bad_input
         cmp byte [eax], 57
@@ -63,11 +63,42 @@ _start:
         jg bad_input
         ; TODO: zamiana a-f
 
-        end_loop:
+        end_loop1:
         inc eax
         dec cl
         cmp cl, 0
-    jne loop
+    jne loop1
+
+    ;Walidacja i konwersja mnoznika
+    mov cl, 200
+    mov eax, multiplier
+
+    loop2:
+        cmp byte [eax], 48
+        jl bad_input
+        cmp byte [eax], 57
+        jg check_upper_case2
+        ; TODO: zamiana cyfr
+    
+        check_upper_case2:
+        cmp byte [eax], 65
+        jl bad_input
+        cmp byte [eax], 70
+        jg check_lower_case2
+        ; TODO: zamiana A-F
+
+        check_lower_case2:
+        cmp byte [eax], 97
+        jl bad_input
+        cmp byte [eax], 102
+        jg bad_input
+        ; TODO: zamiana a-f
+
+        end_loop2:
+        inc eax
+        dec cl
+        cmp cl, 0
+    jne loop2
     
     ; Zakonczenie programu
     mov eax, 1
@@ -78,7 +109,7 @@ _start:
     mov eax, 4
     mov ebx, 1
     mov ecx, message4
-    mov edx, 18
+    mov edx, 20
     int 80h
 
     mov eax, 1
