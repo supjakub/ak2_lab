@@ -9,7 +9,9 @@ section .bss
     ascii1: resb 200
     ascii2: resb 200
     number1: resb 100
+    len1: resb 1
     number2: resb 100
+    len2: resb 1
 
 section .text
 
@@ -41,20 +43,23 @@ _start:
     lea esi, [ascii1]
     lea edi, [number1]
     call ascii_to_hex
+    mov [len1], cl
     lea esi, [ascii2]
     lea edi, [number2]
     call ascii_to_hex
+    mov [len2], cl
 
     ;Wyjscie z programu
     mov eax, 1
     int 80h
 
 ascii_to_hex:
+    xor cl, cl
     next_byte:
     mov al, byte [esi]
     cmp al, 10
     je end
-    inc cx
+    inc cl
     cmp al, 48
     jl bad_input
     cmp al, 57
