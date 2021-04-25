@@ -50,19 +50,24 @@ _start:
     int 80h
 
 ascii_to_hex:
-    next_byte:
+    xor ebx, ebx
+    xor ecx, ecx
+    next_digit:
     mov al, byte [esi]
     cmp al, 10
     je end
-    inc cx
     cmp al, 48
     jl bad_input
     cmp al, 57
     jg upper_case
     ;zamiana cyfr
-    sub al, 30h    
-    shl al, 4
+    sub al, 30h
+    shl ebx, 4
+    add ebx, eax
+    inc ecx
     inc esi
+    cmp ecx, 8
+    je next_dword
     jmp next_digit
     upper_case:
     cmp al, 65
@@ -71,63 +76,37 @@ ascii_to_hex:
     jg lower_case
     ;zamiana A-F
     sub al, 37h
-    shl al, 4
+    shl ebx, 4
+    add ebx, eax
+    inc ecx
     inc esi
+    cmp ecx, 8
+    je next_dword
     jmp next_digit
     lower_case:
-    cmp al, 97h
+    cmp al, 97
     jl bad_input
     cmp al, 102
     jg bad_input
     ;zamiana a-f
     sub al, 57h
-    shl al, 4
+    shl ebx, 4
+    add ebx, eax
+    inc ecx
     inc esi
+    cmp ecx, 8
+    je next_dword
+    jmp next_digit
 
-    next_digit:
-    mov bl, byte [esi]
-    cmp bl, 10
-    jne hex_to_ascii_continue
-    mov [edi], al
-    jmp end
-    hex_to_ascii_continue:
-    cmp bl, 48
-    jl bad_input
-    cmp bl, 57
-    jg upper_case2
-    ;zamiana cyfr
-    sub bl, 30h    
-    add al, bl
-    mov [edi], al
-    inc edi
-    inc esi
-    jmp next_byte
-    upper_case2:
-    cmp bl, 65
-    jl bad_input
-    cmp bl, 70
-    jg lower_case2
-    ;zamiana A-F
-    sub bl, 37h
-    add al, bl
-    mov [edi], al
-    inc edi
-    inc esi
-    jmp next_byte
-    lower_case2:
-    cmp bl, 97h
-    jl bad_input
-    cmp bl, 102
-    jg bad_input
-    ;zamiana a-f
-    sub bl, 57h
-    add al, bl
-    mov [edi], al
-    inc edi
-    inc esi
-    jmp next_byte
-
+    next_dword:
+    mov [edi], ebx
+    add edi, 4
+    xor ebx, ebx
+    xor ecx, ecx
+    jmp next_digit    
+    
     end:
+    mov [edi], ebx
     ret
 
     bad_input:
