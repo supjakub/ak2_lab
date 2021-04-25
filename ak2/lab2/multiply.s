@@ -9,7 +9,9 @@ section .bss
     ascii1: resb 200
     ascii2: resb 200
     number1: resb 100
+    len1: resb 1
     number2: resb 100
+    len2: resb 1
 
 section .text
 
@@ -41,21 +43,42 @@ _start:
     lea esi, [ascii1]
     lea edi, [number1]
     call ascii_to_hex
+    mov ax, dx
+    mov bl, 8
+    div bl
+    cmp ah, 0
+    je no_add1
+    inc al
+    no_add1:
+    mov [len1], al
     lea esi, [ascii2]
     lea edi, [number2]
     call ascii_to_hex
+    mov ax, dx
+    mov bl, 8
+    div bl
+    cmp ah, 0
+    je no_add2
+    inc al
+    no_add2:
+    mov [len2], al
+
+    call multi
 
     ;Wyjscie z programu
     mov eax, 1
     int 80h
 
 ascii_to_hex:
+    xor dx, dx
     xor ebx, ebx
     xor ecx, ecx
+    xor eax, eax
     next_digit:
     mov al, byte [esi]
     cmp al, 10
-    je end
+    je end_ath
+    inc dx
     cmp al, 48
     jl bad_input
     cmp al, 57
@@ -105,7 +128,7 @@ ascii_to_hex:
     xor ecx, ecx
     jmp next_digit    
     
-    end:
+    end_ath:
     mov [edi], ebx
     ret
 
@@ -118,4 +141,27 @@ ascii_to_hex:
     mov eax, 1
     int 80h
 
-    
+multi:
+    lea esi, [number1]
+    mov dl, [len1]
+    next_address1:
+    cmp dl, 1
+    je good_address1
+    add esi, 4
+    dec dl
+    jmp next_address1
+    good_address1:
+    mov eax, [esi]
+
+    lea edi, [number2]
+    mov dl, [len2]
+    next_address2:
+    cmp dl, 1
+    je good_address2
+    add edi, 4
+    dec dl
+    jmp next_address2
+    good_address2:
+    mov ebx, [edi]
+
+    ret
