@@ -2,12 +2,14 @@ global _start
 
 section .data
     msg1 db "Podaj mnozna: "
-    ascii1 times 200 db 0
     msg2 db "Podaj mnoznik: "
-    ascii2 times 200 db 0
-    number1 times 200 db 0
-    number2 times 200 db 0
     msg_bad_input db "Nieprawidlowe dane", 0xa
+
+section .bss
+    ascii1: resb 200
+    ascii2: resb 200
+    number1: resb 100
+    number2: resb 100
 
 section .text
 
