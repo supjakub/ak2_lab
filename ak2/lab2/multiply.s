@@ -60,8 +60,7 @@ ascii_to_hex:
     cmp al, 57
     jg upper_case
     ;zamiana cyfr
-    sub al, 30h    
-    shl al, 4
+    sub al, 30h
     inc esi
     jmp next_digit
     upper_case:
@@ -71,7 +70,6 @@ ascii_to_hex:
     jg lower_case
     ;zamiana A-F
     sub al, 37h
-    shl al, 4
     inc esi
     jmp next_digit
     lower_case:
@@ -81,7 +79,6 @@ ascii_to_hex:
     jg bad_input
     ;zamiana a-f
     sub al, 57h
-    shl al, 4
     inc esi
 
     next_digit:
@@ -96,7 +93,8 @@ ascii_to_hex:
     cmp bl, 57
     jg upper_case2
     ;zamiana cyfr
-    sub bl, 30h    
+    sub bl, 30h  
+    shl al, 4  
     add al, bl
     mov [edi], al
     inc edi
@@ -109,6 +107,7 @@ ascii_to_hex:
     jg lower_case2
     ;zamiana A-F
     sub bl, 37h
+    shl al, 4
     add al, bl
     mov [edi], al
     inc edi
@@ -121,6 +120,7 @@ ascii_to_hex:
     jg bad_input
     ;zamiana a-f
     sub bl, 57h
+    shl al, 4
     add al, bl
     mov [edi], al
     inc edi
