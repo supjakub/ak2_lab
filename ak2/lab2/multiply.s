@@ -12,6 +12,7 @@ section .bss
     len1: resb 1
     number2: resb 100
     len2: resb 1
+    result: resb 400
 
 section .text
 
@@ -48,6 +49,8 @@ _start:
     lea edi, [number2]
     call ascii_to_hex
     mov [len2], cl
+
+    call multi
 
     ;Wyjscie z programu
     mov eax, 1
@@ -143,5 +146,55 @@ ascii_to_hex:
     int 80h
     mov eax, 1
     int 80h
+
+multi:
+    xor eax, eax
+    lea esi, [number1]
+    mov al, [len1]
+    dec al
+    add esi, eax
+
+    xor ebx, ebx
+    lea edi, [number2]
+    mov bl, [len2]
+    dec bl
+    add edi, ebx
+
+    xor ch, ch
+    xor cl, cl
+
+    out_loop:
+    cmp ch, [len1]
+    jnl end_multi
+    mov bl, [edi]
+    push esi
+    in_loop:
+    lea edx, [result]
+    mov al, [esi]
+    mul bl
+    add dl, cl
+    add dl, ch
+    clc
+    add [edx], al
+    inc edx
+    adc [edx], ah
+    check_carry:
+    jnc no_carry
+    inc edx
+    adc [edx], byte 1
+    jmp check_carry
+    no_carry:
+    inc cl
+    dec esi
+    cmp cl, [len2]
+    jl in_loop
+    dec edi
+    pop esi
+    xor cl, cl
+    inc ch
+    jmp out_loop
+
+    end_multi:
+    ret
 
     
