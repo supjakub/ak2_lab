@@ -15,6 +15,8 @@ section .bss
     len2: resb 1
     result: resb 200
     ascii_result: resb 401
+    odd1: resb 1
+    odd2: resb 1
 
 section .text
 
@@ -53,6 +55,22 @@ _start:
     mov [len2], cl
 
     ;Mnozenie
+    xor eax, eax
+    mov al, [len1]
+    mov bl, 2
+    div bl
+    add al, ah
+    mov [odd1], ah
+    mov [len1], al
+
+    xor eax, eax
+    mov al, [len2]
+    mov bl, 2
+    div bl
+    add al, ah
+    mov [odd2], ah
+    mov [len2], al
+
     xor eax, eax
     lea esi, [number1]
     mov al, [len1]
@@ -134,6 +152,11 @@ _start:
     dec esi
     cmp esi, result
     jge next_byte_hta
+    xor edx, edx
+    mov dl, [odd1]
+    sub edi, edx
+    mov dl, [odd2]
+    sub edi, edx
     mov [edi], byte 0xa
 
     ;Wypisanie wyniku
@@ -165,6 +188,7 @@ ascii_to_hex:
     jg upper_case
     ;zamiana cyfr
     sub al, 30h
+    shl al, 4
     inc esi
     jmp next_digit
     upper_case:
@@ -174,6 +198,7 @@ ascii_to_hex:
     jg lower_case
     ;zamiana A-F
     sub al, 37h
+    shl al, 4
     inc esi
     jmp next_digit
     lower_case:
@@ -183,6 +208,7 @@ ascii_to_hex:
     jg bad_input
     ;zamiana a-f
     sub al, 57h
+    shl al, 4
     inc esi
 
     next_digit:
@@ -192,13 +218,13 @@ ascii_to_hex:
     mov [edi], al
     jmp end
     hex_to_ascii_continue:
+    inc cl
     cmp bl, 48
     jl bad_input
     cmp bl, 57
     jg upper_case2
     ;zamiana cyfr
-    sub bl, 30h  
-    shl al, 4  
+    sub bl, 30h    
     add al, bl
     mov [edi], al
     inc edi
@@ -211,7 +237,6 @@ ascii_to_hex:
     jg lower_case2
     ;zamiana A-F
     sub bl, 37h
-    shl al, 4
     add al, bl
     mov [edi], al
     inc edi
@@ -224,7 +249,6 @@ ascii_to_hex:
     jg bad_input
     ;zamiana a-f
     sub bl, 57h
-    shl al, 4
     add al, bl
     mov [edi], al
     inc edi
