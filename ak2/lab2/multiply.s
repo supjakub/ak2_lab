@@ -193,5 +193,3 @@ multi:
     cmp ch, [len2]
     jl in_loop
     ret
-
-    
