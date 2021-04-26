@@ -3,6 +3,7 @@ global _start
 section .data
     msg1 db "Podaj mnozna: "
     msg2 db "Podaj mnoznik: "
+    msg3 db "Wynik: "
     msg_bad_input db "Nieprawidlowe dane", 0xa
 
 section .bss
@@ -12,7 +13,8 @@ section .bss
     len1: resb 1
     number2: resb 100
     len2: resb 1
-    result: resb 400
+    result: resb 200
+    ascii_result: resb 401
 
 section .text
 
@@ -50,7 +52,101 @@ _start:
     call ascii_to_hex
     mov [len2], cl
 
-    call multi
+    ;Mnozenie
+    xor eax, eax
+    lea esi, [number1]
+    mov al, [len1]
+    dec al
+    add esi, eax
+
+    xor ebx, ebx
+    lea edi, [number2]
+    mov bl, [len2]
+    dec bl
+    add edi, ebx
+
+    xor ch, ch
+    xor cl, cl
+    push esi
+
+    in_loop:
+    mov al, [esi]
+    mov ah, [edi]
+    mul ah
+    lea edx, [result]
+    add dl, ch
+    add dl, cl
+    clc
+    add byte [edx], al
+    inc edx
+    adc byte [edx], ah
+    check_carry:
+    jnc no_carry
+    inc edx
+    add byte [edx], 1
+    jmp check_carry
+    no_carry:
+    dec esi
+    inc cl
+    cmp cl, [len1]
+    jl in_loop
+    pop esi
+    push esi
+    dec edi
+    inc ch
+    xor cl, cl
+    cmp ch, [len2]
+    jl in_loop
+
+    ;Konwersja na ascii
+    lea esi, [result]
+    add esi, 400
+    next:
+    dec esi
+    cmp byte [esi], 0
+    je next
+
+    lea edi, [ascii_result]
+    next_byte_hta:
+    mov al, byte [esi]
+    mov bl, al
+    shr al, 4
+    cmp al, 9
+    jg letter_al
+    add al, 30h
+    jmp digit_al
+    letter_al:
+    add al, 57h
+    digit_al:
+    mov [edi], al
+    inc edi
+    shl bl, 4
+    shr bl, 4
+    cmp bl, 9
+    jg letter_bl
+    add bl, 30h
+    jmp digit_bl
+    letter_bl:
+    add bl, 57h
+    digit_bl:
+    mov [edi], bl
+    inc edi
+    dec esi
+    cmp esi, result
+    jge next_byte_hta
+    mov [edi], byte 0xa
+
+    ;Wypisanie wyniku
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, msg3
+    mov edx, 7
+    int 80h
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, ascii_result
+    mov edx, 200
+    int 80h
 
     ;Wyjscie z programu
     mov eax, 1
@@ -146,50 +242,3 @@ ascii_to_hex:
     int 80h
     mov eax, 1
     int 80h
-
-multi:
-    xor eax, eax
-    lea esi, [number1]
-    mov al, [len1]
-    dec al
-    add esi, eax
-
-    xor ebx, ebx
-    lea edi, [number2]
-    mov bl, [len2]
-    dec bl
-    add edi, ebx
-
-    xor ch, ch
-    xor cl, cl
-    push esi
-
-    in_loop:
-    mov al, [esi]
-    mov ah, [edi]
-    mul ah
-    lea edx, [result]
-    add dl, ch
-    add dl, cl
-    clc
-    add byte [edx], al
-    inc edx
-    adc byte [edx], ah
-    check_carry:
-    jnc no_carry
-    inc edx
-    add byte [edx], 1
-    jmp check_carry
-    no_carry:
-    dec esi
-    inc cl
-    cmp cl, [len1]
-    jl in_loop
-    pop esi
-    push esi
-    dec edi
-    inc ch
-    xor cl, cl
-    cmp ch, [len2]
-    jl in_loop
-    ret
