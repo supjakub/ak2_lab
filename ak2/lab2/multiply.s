@@ -162,39 +162,36 @@ multi:
 
     xor ch, ch
     xor cl, cl
-
-    out_loop:
-    cmp ch, [len1]
-    jnl end_multi
-    mov bl, [edi]
     push esi
+
     in_loop:
-    lea edx, [result]
     mov al, [esi]
-    mul bl
-    add dl, cl
+    mov ah, [edi]
+    mul ah
+    lea edx, [result]
     add dl, ch
+    add dl, cl
     clc
-    add [edx], al
+    add byte [edx], al
     inc edx
-    adc [edx], ah
+    adc byte [edx], ah
     check_carry:
     jnc no_carry
     inc edx
-    adc [edx], byte 1
+    add byte [edx], 1
     jmp check_carry
     no_carry:
-    inc cl
     dec esi
-    cmp cl, [len2]
+    inc cl
+    cmp cl, [len1]
     jl in_loop
-    dec edi
     pop esi
-    xor cl, cl
+    push esi
+    dec edi
     inc ch
-    jmp out_loop
-
-    end_multi:
+    xor cl, cl
+    cmp ch, [len2]
+    jl in_loop
     ret
 
     
