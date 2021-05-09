@@ -4,7 +4,7 @@ section .data
     s_format: db "%s", 10, 0
     lf_format: db "%lf", 0
     c_format: db " %c", 0
-    result_format: db "Wynik: %f", 10, 0
+    result_format: db "Wynik: %.16lf", 10, 0
     msg1 db "Podaj pierwszy operand: ", 0
     msg2 db "Podaj drugi operand: ", 0
     msg3 db "Podaj dzialanie (+, -, *, /): ", 0
@@ -108,7 +108,9 @@ main:
     fdiv
 
     print_result:
-    fstp qword [esp]
+    fstp qword [number1]
+    push dword [number1+4]
+    push dword [number1]
     push result_format
     call printf
 
