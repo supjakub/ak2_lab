@@ -1,0 +1,1 @@
+Po ściągnięciu plików źródłowych kompilacja odbywa się poprzez komendę make. Następnie uruchomienie programu poprzez komendę ./fpu. Wymagany jest kompilator NASM oraz linker gcc.
