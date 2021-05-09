@@ -2,7 +2,7 @@ global main
 
 section .data
     s_format: db "%s", 10, 0
-    lf_format: db "%f", 0
+    lf_format: db "%lf", 0
     c_format: db " %c", 0
     result_format: db "Wynik: %f", 10, 0
     msg1 db "Podaj pierwszy operand: ", 0
@@ -83,8 +83,8 @@ main:
     fldcw [control_word]
 
     check_operation:
-    fld dword [number1]
-    fld dword [number2]
+    fld qword [number1]
+    fld qword [number2]
     cmp byte [operation], 43
     je add
     cmp byte [operation], 45
