@@ -1,6 +1,6 @@
 #include "libbmp.h"
 
-bmp_pixel* code(bmp_pixel* pixels, char* text);
+void code(bmp_pixel** pixels, char* text);
 
 int main ()
 {
@@ -12,7 +12,7 @@ int main ()
     scanf ("%s", text);
     bmp_img img;
     bmp_img_read(&img, file_name);
-    bmp_pixel* result = code(&img.img_pixels[0][0], &text[0]);
+    code(img.img_pixels, &text[0]);
     return 0;
 }
 
