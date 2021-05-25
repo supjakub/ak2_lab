@@ -1,6 +1,6 @@
-#include "libbmp.h"
+#include <stdio.h>
 
-void code(bmp_pixel** pixels, char* text, int width, int height);
+void code(char* bits, char* text);
 
 int main ()
 {
@@ -10,16 +10,34 @@ int main ()
     char text[50]="";
     printf("Podaj tekst do zakodowania: ");
     scanf ("%s", text);
-    int width, height;
-    bmp_header *header;
-    FILE *input = fopen(file_name, "rb");
-    bmp_header_read(header, input);
-    width = header->biWidth;
-    height = header->biHeight;
-    width = width * 3;
-    bmp_img img;
-    bmp_img_read(&img, file_name);
-    code(img.img_pixels, &text[0]);
+    FILE *file = fopen(file_name, "rb+");
+    unsigned char header[10];
+    fread(header,sizeof(header),1,file);
+    long int pixels_offset;
+    fseek(file, 10, SEEK_SET);
+    fread(&pixels_offset, sizeof(pixels_offset),1,file);
+    long int biWidth;
+    fread(&biWidth, sizeof(biWidth),1,file);
+    fread(&biWidth, sizeof(biWidth),1,file);
+    long int biHeight;
+    fread(&biHeight, sizeof(biHeight),1,file);
+    unsigned short biBitCount;
+    fread(&biBitCount, sizeof(biBitCount),1,file);
+    fread(&biBitCount, sizeof(biBitCount),1,file);
+
+    long int bytes_count = biWidth * (long int) biBitCount;
+    bytes_count = bytes_count * biBitCount;
+    bytes_count = bytes_count * biHeight;
+    bytes_count = bytes_count / 8;
+    char bits[bytes_count];
+    fseek(file, pixels_offset, SEEK_SET);
+    fread(bits, bytes_count,1,file);
+
+    code(bits, text);
+
+    fseek(file, pixels_offset, SEEK_SET);
+    fwrite(bits, bytes_count,1,file);
+    fclose(file);
     return 0;
 }
 
