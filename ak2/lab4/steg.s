@@ -38,7 +38,7 @@ code:
     shl dl, cl
     shr dl, 7
     add dh, dl
-    mov dh, [eax]
+    mov [eax], dh
     inc cl
     inc eax
     cmp cl, 8
