@@ -27,11 +27,11 @@ code:
     jl loop_code
     mov cl, 0
     inc ebx
-    cmp byte [ebx], 0
+    cmp byte [ebx], 10
     jne loop_code
 
     little_loop_code:
-    mov dl, 10
+    mov dl, 0
     mov dh, [eax]
     shr dh, 1
     shl dh, 1
