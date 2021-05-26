@@ -8,6 +8,7 @@ code:
     mov ebp, esp
 
     mov eax, [ebp+8] ;Poczatek pikseli
+    push ebx
     mov ebx, [ebp+12] ;Poczatek tekstu
 
     mov cl, 0
@@ -43,5 +44,6 @@ code:
     cmp cl, 8
     jne little_loop_code
 
+    pop ebx
     pop ebp
     ret
