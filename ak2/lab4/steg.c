@@ -7,9 +7,10 @@ int main ()
     char file_name[260]="";
     printf("Podaj nazwe pliku: ");
     scanf("%s", file_name);
-    char text[50]="";
+    char text[100]="";
     printf("Podaj tekst do zakodowania: ");
-    scanf ("%s", text);
+    getchar();
+    fgets(text, 100, stdin);
     FILE *file = fopen(file_name, "rb+");
     unsigned char header[10];
     fread(header,sizeof(header),1,file);

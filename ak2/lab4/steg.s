@@ -31,7 +31,7 @@ code:
     jne loop_code
 
     little_loop_code:
-    mov dl, 3
+    mov dl, 10
     mov dh, [eax]
     shr dh, 1
     shl dh, 1
