@@ -15,9 +15,6 @@ int main ()
     long int pixels_offset;
     fseek(file, 10, SEEK_SET);
     fread(&pixels_offset, sizeof(pixels_offset),1,file);
-    int choice;
-    printf("Wybierz tryb pracy: 1-kodowanie, 2-dekodowanie: ");
-    scanf("%i", &choice);
     long int biSize;
     fread(&biSize, sizeof(biSize),1,file);
     long int biWidth;
@@ -37,6 +34,10 @@ int main ()
     unsigned char bits[bytes_count];
     fseek(file, pixels_offset, SEEK_SET);
     fread(bits, bytes_count,1,file);
+    printf("Format pliku: %hu\n", biBitCount);
+    int choice;
+    printf("Wybierz tryb pracy: 1-kodowanie, 2-dekodowanie: ");
+    scanf("%i", &choice);
 
     switch (choice) {
         case 1:
@@ -49,7 +50,7 @@ int main ()
         break;
         case 2:
         decode(bits, text);
-        printf("Ukryta wiadomosc: %s", text);
+        printf("Ukryta wiadomosc: %s\n", text);
         break;
     }
     fclose(file);

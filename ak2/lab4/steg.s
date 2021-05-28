@@ -14,13 +14,13 @@ code:
     loop_code:
     mov dl, [ebx] ;Bajt litery
     mov dh, [eax] ;Bajt pixela
-    shr dh, 1
-    shl dh, 1
+    shr dh, 2
+    shl dh, 2
     shl dl, cl
-    shr dl, 7
+    shr dl, 6
     add dh, dl
     mov [eax], dh
-    inc cl
+    add cl, 2
     inc eax
     cmp cl, 8
     jl loop_code
@@ -32,13 +32,13 @@ code:
     little_loop_code:
     mov dl, 0
     mov dh, [eax]
-    shr dh, 1
-    shl dh, 1
+    shr dh, 2
+    shl dh, 2
     shl dl, cl
-    shr dl, 7
+    shr dl, 6
     add dh, dl
     mov [eax], dh
-    inc cl
+    add cl, 2
     inc eax
     cmp cl, 8
     jne little_loop_code
@@ -60,16 +60,16 @@ decode:
     mov dh, 0
     inner_loop_decode:
     mov dl, [eax]
-    shl dl, 7
-    shr dl, 7
+    shl dl, 6
+    shr dl, 6
     add dh, dl
-    cmp cl, 7
+    cmp cl, 3
     je no_shift
-    shl dh, 1
-    no_shift
+    shl dh, 2
+    no_shift:
     inc cl
     inc eax
-    cmp cl, 8
+    cmp cl, 4
     jl inner_loop_decode
     mov [ebx], dh
     inc ebx
