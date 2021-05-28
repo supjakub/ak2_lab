@@ -8,7 +8,7 @@ int main ()
     char file_name[260]="";
     printf("Podaj nazwe pliku: ");
     scanf("%s", file_name);
-    char text[100]="";
+    char text[500]="";
     FILE *file = fopen(file_name, "rb+");
     unsigned char header[10];
     fread(header,sizeof(header),1,file);
@@ -24,9 +24,6 @@ int main ()
     unsigned short biBitCount;
     fread(&biBitCount, sizeof(biBitCount),1,file);
     fread(&biBitCount, sizeof(biBitCount),1,file);
-    long int biSizeImage;
-    fread(&biSizeImage, sizeof(biSizeImage),1,file);
-    fread(&biSizeImage, sizeof(biSizeImage),1,file);
 
     long int bytes_count = biWidth * (long int) biBitCount;
     bytes_count = bytes_count / 8;
@@ -43,7 +40,7 @@ int main ()
         case 1:
         printf("Podaj tekst do zakodowania: ");
         getchar();
-        fgets(text, 100, stdin);
+        fgets(text, 500, stdin);
         code(bits, text);
         fseek(file, pixels_offset, SEEK_SET);
         fwrite(bits, bytes_count,1,file);
