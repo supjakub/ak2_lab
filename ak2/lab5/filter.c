@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-void filter(char *input_bits, long int width, long int height, unsigned short bpb, long int bpr, signed char *mask, char *output_bits);
+void filter(char *input_bits, long int width, long int height, unsigned short bpp, long int bpr, signed char *mask, char *output_bits);
 
 int main() {
     char input_name[260]="";
@@ -39,11 +39,12 @@ int main() {
 
     unsigned char output_bits[bytes_count];
     signed char mask[] = {1, 0, -1, 0, 0, 0, -1, 0, 1};
-    filter(bits, biWidth, biHeight, biBitCount, (long int) bytes_count/biHeight, mask, output_bits);
+    unsigned short bpp = biBitCount / 8;
+    filter(bits, biWidth, biHeight, bpp, (long int) bytes_count/biHeight, mask, output_bits);
 
     FILE *output_file = fopen("result.bmp", "wb");
     fwrite(header, pixels_offset,1,output_file);
-    fwrite(bits, bytes_count,1,output_file);
+    fwrite(output_bits, bytes_count,1,output_file);
     fwrite(footer, footer_size,1,output_file);
     fclose(output_file);
 }
