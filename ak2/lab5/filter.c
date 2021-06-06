@@ -40,7 +40,9 @@ int main() {
     unsigned char output_bits[bytes_count];
     signed char mask[] = {1, 0, -1, 0, 0, 0, -1, 0, 1};
     unsigned short bpp = biBitCount / 8;
-    filter(bits, biWidth, biHeight, bpp, (long int) bytes_count/biHeight, mask, output_bits);
+    long int bpr = bytes_count/biHeight;
+    printf("Bajty na piksel: %hu, bajty na wiersz: %li",bpp,bpr);
+    filter(bits, biWidth, biHeight, bpp, bpr, mask, output_bits);
 
     FILE *output_file = fopen("result.bmp", "wb");
     fwrite(header, pixels_offset,1,output_file);

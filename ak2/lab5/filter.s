@@ -21,6 +21,7 @@ filter:
     first_row:
     mov byte [edi], 255
     inc edi
+    inc esi
     inc ecx
     cmp ecx, [ebp+24]
     jl first_row
@@ -31,6 +32,7 @@ filter:
     next_byte_left:
     mov byte [edi], 255
     inc edi
+    inc esi
     inc ecx
     cmp ecx, [ebp+20]
     jl next_byte_left
@@ -39,8 +41,69 @@ filter:
     next_pixel:
     mov ecx, 0
     next_byte:
-    mov byte [edi], 0
+
+    mov eax, 0
+    mov ebx, 0
+    sub esi, [ebp+24]
+    sub esi, [ebp+20]
+    mov al, [esi]
+    imul byte [edx]
+    add ebx, eax
+
+    mov eax, 0
+    add esi, [ebp+20]
+    mov al, [esi]
+    imul byte [edx+1]
+    add ebx, eax
+
+    mov eax, 0
+    add esi, [ebp+20]
+    mov al, [esi]
+    imul byte [edx+2]
+    add ebx, eax
+
+    mov eax, 0
+    add esi, [ebp+24]
+    mov al, [esi]
+    imul byte [edx+5]
+    add ebx, eax
+
+    mov eax, 0
+    sub esi, [ebp+20]
+    mov al, [esi]
+    imul byte [edx+4]
+    add ebx, eax
+
+    mov eax, 0
+    sub esi, [ebp+20]
+    mov al, [esi]
+    imul byte [edx+3]
+    add ebx, eax
+
+    mov eax, 0
+    add esi, [ebp+24]
+    mov al, [esi]
+    imul byte [edx+6]
+    add ebx, eax
+
+    mov eax, 0
+    add esi, [ebp+20]
+    mov al, [esi]
+    imul byte [edx+7]
+    add ebx, eax
+
+    mov eax, 0
+    add esi, [ebp+20]
+    mov al, [esi]
+    imul byte [edx+8]
+    add ebx, eax
+
+    sub esi, [ebp+24]
+    sub esi, [ebp+20]
+
+    mov byte [edi], bl
     inc edi
+    inc esi
     inc ecx
     cmp ecx, [ebp+20]
     jl next_byte
@@ -53,6 +116,7 @@ filter:
     next_byte_right:
     mov byte [edi], 255
     inc edi
+    inc esi
     inc ecx
     cmp ecx, [ebp+20]
     jl next_byte_right
@@ -66,6 +130,7 @@ filter:
     last_row:
     mov byte [edi], 255
     inc edi
+    inc esi
     inc ecx
     cmp ecx, [ebp+24]
     jl last_row
