@@ -35,13 +35,19 @@ filter:
     cmp ecx, [ebp+20]
     jl next_byte_left
 
-    mov ecx, 6
+    mov word [column], 2
+    next_pixel:
+    mov ecx, 0
     next_byte:
     mov byte [edi], 0
     inc edi
     inc ecx
-    cmp ecx, [ebp+24]
+    cmp ecx, [ebp+20]
     jl next_byte
+    inc word [column]
+    mov cx, [ebp+12]
+    cmp [column], cx
+    jl next_pixel
 
     mov ecx, 0
     next_byte_right:
