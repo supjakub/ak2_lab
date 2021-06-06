@@ -101,7 +101,23 @@ filter:
     sub esi, [ebp+24]
     sub esi, [ebp+20]
 
-    mov byte [edi], bl
+    mov eax, ebx
+    mov ebx, 0
+    add bl, [edx]
+    add bl, [edx+1]
+    add bl, [edx+2]
+    add bl, [edx+3]
+    add bl, [edx+4]
+    add bl, [edx+5]
+    add bl, [edx+6]
+    add bl, [edx+7]
+    add bl, [edx+8]
+    cmp bl, 0
+    je no_div
+    idiv bl
+    no_div:
+
+    mov byte [edi], al
     inc edi
     inc esi
     inc ecx
