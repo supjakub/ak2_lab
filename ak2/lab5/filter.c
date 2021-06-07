@@ -38,10 +38,41 @@ int main() {
     fclose(input_file);
 
     unsigned char output_bits[bytes_count];
-    signed char mask[] = {1, 0, -1, 0, 0, 0, -1, 0, 1};
     unsigned short bpp = biBitCount / 8;
     long int bpr = bytes_count/biHeight;
-    printf("Bajty na piksel: %hu, bajty na wiersz: %li",bpp,bpr);
+    printf("Wybierz rodzaj filtru: 1-usredniajacy, 2-usun srednia, 3-konturowy ");
+    int choice;
+    scanf("%i", &choice);
+    signed char mask[9];
+    switch(choice) {
+        case 1:
+            for (int i=0; i<9; i++){
+                mask[i] = 1;
+            }
+            break;
+        case 2:
+            mask[0]=-1;
+            mask[1]=-1;
+            mask[2]=-1;
+            mask[3]=-1;
+            mask[4]=9;
+            mask[5]=-1;
+            mask[6]=-1;
+            mask[7]=-1;
+            mask[8]=-1;
+            break;
+        case 3:
+            mask[0]=0;
+            mask[1]=-1;
+            mask[2]=0;
+            mask[3]=-1;
+            mask[4]=4;
+            mask[5]=-1;
+            mask[6]=0;
+            mask[7]=-1;
+            mask[8]=0;
+            break;
+    }
     filter(bits, biWidth, biHeight, bpp, bpr, mask, output_bits);
 
     FILE *output_file = fopen("result.bmp", "wb");

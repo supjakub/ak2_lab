@@ -114,6 +114,8 @@ filter:
     add bl, [edx+8]
     cmp bl, 0
     je no_div
+    cmp bl, 1
+    je no_div
     idiv bl
     no_div:
 
